@@ -32,5 +32,4 @@ public class ControllerExceptionHandler {
         var resourceNotFoundDTO = new ResourceNotFoundDTO(ex.getMessage(), status.value());
         return ResponseEntity.status(status).body(new ValidationErrorDTO(errors, status.value()));
     }
-
 }

@@ -2,9 +2,7 @@ package br.eng.eaa.locatech.controller;
 
 import br.eng.eaa.locatech.dto.AluguelRequestDTO;
 import br.eng.eaa.locatech.entities.Aluguel;
-import br.eng.eaa.locatech.entities.Pessoa;
 import br.eng.eaa.locatech.services.AluguelService;
-import br.eng.eaa.locatech.services.PessoaService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
@@ -17,15 +15,15 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/alugueis")
+@RequestMapping("/v2/alugueis")
 @Tag(name = "Alugueis", description = "Endpoints para gerenciamento de alugueis")
-public class AluguelController {
+public class AluguelControllerV2 {
 
     private static final Logger logger = LoggerFactory.getLogger(VeiculoController.class);
 
     private final AluguelService aluguelService;
 
-    public AluguelController(AluguelService aluguelService) {
+    public AluguelControllerV2(AluguelService aluguelService) {
         this.aluguelService = aluguelService;
     }
 
@@ -47,8 +45,15 @@ public class AluguelController {
         return ResponseEntity.ok(pessoa);
     }
 
-    @PostMapping
+    @PostMapping(produces = "application/vnd.locatech.v2+json")
     public ResponseEntity<Void> saveAluguel(@Valid @RequestBody AluguelRequestDTO aluguel){
+        logger.info("POST -> /alugueis");
+        aluguelService.saveAluguel(aluguel);
+        return ResponseEntity.status(201).build();
+    }
+
+    @PostMapping(produces = "application/vnd.locatech.v1+json")
+    public ResponseEntity<Void> saveAluguelV1(@Valid @RequestBody AluguelRequestDTO aluguel){
         logger.info("POST -> /alugueis");
         aluguelService.saveAluguel(aluguel);
         return ResponseEntity.status(201).build();
